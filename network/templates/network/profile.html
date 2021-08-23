@@ -1,0 +1,15 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    
+<div class="card" style="width: 18rem;">
+    <img class="card-img-top" src="..." alt="Card image cap">
+    <div class="card-body">
+        <h5 class="card-title">{{user.username}}</h5>
+        <p class="card-text">Followers {{user.followers.all.count}}, Following {{user.following.all.count}}</p>
+        <a href="{% url 'follow' user.username %}" class="btn btn-primary">Follow, unfollow</a>
+    </div>
+</div>
+
+<div id="user-posts"></div>
+{% endblock %}

@@ -1,0 +1,51 @@
+  
+.post {
+    border-style: solid;
+    border-color:blue;
+    padding: 1%;
+    margin: 1%;
+  }
+  
+  .post div {
+    padding: 0.25rem;
+  }
+  
+  button {
+    margin: 1%;
+    background-color: blue;
+  }
+  
+  i {
+    margin: 1%;
+  }
+
+  .fa:hover {
+    color: red !important;
+    font-size: 24px;
+  }
+
+  .post-username {
+    font-weight: bold;
+  }
+  
+  .timestamp {
+    font-size: smaller;
+    font-weight: lighter;
+  }
+  
+  .navbar {
+    background-color: teal;
+  }
+  
+  .navbar a {
+    color: black;
+  }
+  
+  #user-page-data * {
+    margin-left: 1%;
+    display: inline-block;
+  }
+  
+  .margin {
+    margin: 1%;
+  }
