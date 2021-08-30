@@ -1,16 +1,42 @@
+let log_user;
+let logged_user;
+
 document.addEventListener('DOMContentLoaded', function () {
-    load_posts('all');
+    const all_posts = document.querySelector('#all-posts');
+    const profile_posts = document.querySelector('#user-posts');
+    const username = document.querySelector('#username');
+    log_user = document.querySelector('#logged-user strong');
+    const followBtn = document.querySelector('#follow');
+    const following_posts = document.querySelector('#users-posts');
+
+    if (log_user){
+        logged_user = log_user.innerHTML;
+    }
+
+    if (all_posts){
+        var container = all_posts;
+        load_posts('all', container);
+    }
+    if (username){
+        var container = profile_posts;
+        load_posts(username.innerHTML,container);
+    }
+    if (following_posts){
+        var container = following_posts;
+        load_posts('following',container);
+    }
+
+    if(followBtn){
+        followBtn.addEventListener('click', () => follow(username.innerHTML));
+    }    
 });
 
-function load_posts(filter) {
-
-    const our_div = document.querySelector('#all-posts');
-    const logged_user = document.querySelector('#logged-user strong').innerHTML;
-
+function load_posts(filter, container) { 
+    console.log(`posts/${filter}`);
     fetch(`posts/${filter}`)
     .then(response => response.json())
     .then(posts => {
-
+        console.log(`posts/${filter}`);
         posts.forEach(post => {
             console.log(post);
             // Create elements
@@ -18,10 +44,10 @@ function load_posts(filter) {
             div.className = 'hide post rounded';
 
             const anchor = document.createElement('a');
-            anchor.href = `/user/${post.user}`;
+            anchor.href = `${post.owner}`;
 
             const username = document.createElement('div');
-            username.innerHTML = post.user;
+            username.innerHTML = post.owner;
             username.className = 'post-username';
 
             const timestamp = document.createElement('div');
@@ -35,24 +61,29 @@ function load_posts(filter) {
             textarea.innerHTML = content.innerHTML;
             textarea.style.display = 'none';
 
-            if (post.user == logged_user) {
-                const editButton = document.createElement('button');
-                editButton.innerHTML = 'Edit';
-                editButton.className = 'btn btn-primary';
-                const saveButton = document.createElement('button');
-                saveButton.innerHTML = 'Save';
-                saveButton.className = 'btn btn-primary';
-                saveButton.style.display = 'none';
-                editButton.addEventListener('click', () => edit(content, textarea, editButton, saveButton, post.id));
-                div.append(editButton);
-                div.append(saveButton);
+            if(log_user){
+                if (post.owner == logged_user) {
+                    const editButton = document.createElement('button');
+                    editButton.innerHTML = 'Edit';
+                    editButton.className = 'btn btn-primary';
+                    const saveButton = document.createElement('button');
+                    saveButton.innerHTML = 'Save';
+                    saveButton.className = 'btn btn-primary';
+                    saveButton.style.display = 'none';
+                    editButton.addEventListener('click', () => edit(content, textarea, editButton, saveButton, post.id));
+                    div.append(editButton);
+                    div.append(saveButton);
+                }
             }
 
             const icon = document.createElement('i');
+            icon.className = 'fas fa-thumbs-up';
+            icon.innerHTML = ' '+post.liked_by.length;
 
-            like_icon_classname(logged_user, post, icon);
-            icon.innerHTML = ' '+post.liked_by.length; //.likes;
-            icon.addEventListener('click', () => like(logged_user, post.id, icon));
+            if(log_user){
+                like_icon_classname(logged_user, post, icon);
+                icon.addEventListener('click', () => like(logged_user, post.id, icon));
+            }
 
             let hr=document.createElement('hr');
             anchor.append(username);
@@ -62,7 +93,7 @@ function load_posts(filter) {
             div.append(icon);
             div.append(timestamp);
             div.appendChild(hr);
-            our_div.append(div);
+            container.append(div);
             // showPosts.push(div);
         })
 
@@ -134,18 +165,27 @@ function like(logged_user, post_id, icon){
     });
 }
 
-function follow(username, change) {
-    fetch(`/user/${username}`, {
-        method: 'PUT',
-        body: JSON.stringify({
-            follow: `${change}`
-        })
-      })
-    .then(response => response.json())
-    .then(info => {
-        document.querySelector('#foll-numb').innerHTML = info.followers;
-
-    })
+function follow(username) {
+    if(log_user){
+        if(logged_user != username){
+            fetch(`/follow/${username}`)
+            .then(response => response.json())
+            .then(user => {
+                document.querySelector('#foll-numb').innerHTML = ''+user.followers.length;
+                if (user.followers.includes(logged_user)){
+                    document.querySelector('#follow').innerHTML = "Unfollow";
+                }
+                else {
+                    document.querySelector('#follow').innerHTML = "Follow";
+                }
+            })
+        }
+        else {
+            console.log("can't follow themselves");
+            followBtn.style.display = 'none';
+        }
+            
+    }   
 }
 
 function pagination(appendHere, action) {

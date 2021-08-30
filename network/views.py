@@ -11,28 +11,7 @@ from .models import User, Post
 
 
 def index(request):
-    return render(request, "network/index.html", {
-    "posts_to_show":"all"
-    })
-
-def profile(request, username):
-    user=User.objects.get(username=username)
-    user_posts=posts(request,filter=username)
-    return render(request,"network/profile.html",{
-        "user":user,
-        "user_posts":user_posts
-    })
-
-@login_required
-def follow(request, username):
-    user=User.objects.get(username=username)
-    current_user=request.user
-    user.follow_unfollow(current_user)
-    user_posts=posts(request,filter=username)
-    return render(request,"network/profile.html",{
-        "user":user,
-        "user_posts":user_posts
-    })
+    return render(request, "network/index.html")
 
 @login_required
 def new_post(request):
@@ -80,10 +59,10 @@ def posts(request, filter):
             posts = Post.objects.all()
 
         except Post.DoesNotExist:
-            return JsonResponse({"error": "Posts not found."}, status=404)
+            return JsonResponse({"error": "Posts not found for filter : "+filter}, status=404)
 
     # Filter posts from people that the current user follows
-    elif filter == 'current':
+    elif filter == 'following':
         try:
             currentUser = request.user
 
@@ -98,7 +77,7 @@ def posts(request, filter):
                 posts |= Post.objects.filter(owner=user)
 
         except Post.DoesNotExist:
-            return JsonResponse({"error": "Posts not found."}, status=404)
+            return JsonResponse({"error": "Posts not found for filter : "+filter}, status=404)
 
     else:
         try:
@@ -106,11 +85,36 @@ def posts(request, filter):
             posts = Post.objects.filter(owner=user)
 
         except Post.DoesNotExist:
-            return JsonResponse({"error": "Posts not found."}, status=404)
+            return JsonResponse({"error": "Posts not found for filter : "+filter}, status=404)
 
     posts = posts.order_by("-timestamp").all()
 
     return JsonResponse([post.serialize() for post in posts], safe=False)
+
+
+@login_required
+def following(request):
+    return render(request, "network/following.html")
+
+def profile(request, username):
+    user=User.objects.get(username=username)
+    logged_user=request.user
+    followBtn_initLabel="Follow"
+    if logged_user in user.followers.all():
+        followBtn_initLabel="Unfollow"
+    return render(request,"network/profile.html",{
+        "profile":user,
+        "followBtn_initLabel":followBtn_initLabel
+    })
+
+@login_required
+def follow(request, username):
+    user=User.objects.get(username=username)
+    current_user=request.user
+    current_user.follow_unfollow(user)
+    return JsonResponse(user.serialize(), safe=False)
+    
+
 # def new_post(request):
 #     empty_post=''
 #     if request.method == 'POST':

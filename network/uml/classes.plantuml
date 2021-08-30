@@ -1,0 +1,27 @@
+@startuml
+
+title Twitter like social network - Class Diagram
+
+
+class User {
+  +Name
+  +Mail
+  +following
+  +follow()
+  +unfolow()
+}
+
+class Post {
+  +owner
+  +content
+  +creationDate
+  +likedBy
+  +like()
+  +dislike()
+}
+
+User "many" *-- "many" User: Follow
+User "1" *-- "many" Post: Own
+User "many" *-- "many" Post : Like
+
+@enduml

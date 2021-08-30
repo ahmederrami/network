@@ -11,6 +11,15 @@ class User(AbstractUser):
                 self.following.remove(user)
             else:
                 self.following.add(user)
+            self.save()
+
+    def serialize(self):
+        return {
+            "id": self.pk,
+            "username": self.username,
+            "followers": [user.username for user in self.followers.all()],
+            "following" : [user.username for user in self.following.all()]
+        }
 
 
 class Post(models.Model):
@@ -29,7 +38,7 @@ class Post(models.Model):
     def serialize(self):
         return {
             "id": self.pk,
-            "user": self.owner.username,
+            "owner": self.owner.username,
             "content": self.content,
             "timestamp": self.timestamp.strftime("%m/%d/%Y, %H:%M:%S"),
             "likes": self.likedBy.all().count(),

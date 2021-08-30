@@ -1,6 +1,6 @@
 {% extends "network/layout.html" %}
-
 {% block body %}
+
 {% if user.is_authenticated %}
     
     <div id="new-post" class="rounded post">
@@ -12,5 +12,6 @@
         </form>
     </div>
 {% endif %}
+
 <div id="all-posts"></div>
 {% endblock %}

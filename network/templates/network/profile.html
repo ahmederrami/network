@@ -2,13 +2,15 @@
 
 {% block body %}
     
-<div class="card" style="width: 18rem;">
-    <img class="card-img-top" src="..." alt="Card image cap">
-    <div class="card-body">
-        <h5 class="card-title">{{user.username}}</h5>
-        <p class="card-text">Followers {{user.followers.all.count}}, Following {{user.following.all.count}}</p>
-        <a href="{% url 'follow' user.username %}" class="btn btn-primary">Follow, unfollow</a>
-    </div>
+<div id="user-page-data">
+    <h2 id="username">{{ profile.username }}</h2>
+    <p id="following-number">Following: {{profile.following.all.count}}</p>
+    <p id="followers-number">Followers: <div id="foll-numb">{{profile.followers.all.count}}</div></p>
+    {% if user.is_authenticated %}
+        {% if user.username != profile.username %}
+            <button id="follow" class="btn btn-primary">{{followBtn_initLabel}}</button>
+        {% endif %}
+    {% endif %}
 </div>
 
 <div id="user-posts"></div>
