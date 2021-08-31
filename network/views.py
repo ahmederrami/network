@@ -113,24 +113,6 @@ def follow(request, username):
     current_user=request.user
     current_user.follow_unfollow(user)
     return JsonResponse(user.serialize(), safe=False)
-    
-
-# def new_post(request):
-#     empty_post=''
-#     if request.method == 'POST':
-#         if request.POST.get('post-button'):
-#             if request.POST.get('post-content'):
-#                 owner=request.user
-#                 content=request.POST.get('post-content')
-#                 timestamp=datetime.now()
-#                 add_post(owner,content,timestamp)
-#                 return HttpResponseRedirect(reverse("index"))
-#             else:
-#                 empty_post='Your post content is empty !'
-#     return render(request, "network/new_post.html", {
-#         'user':request.user,
-#         'empty_post':empty_post
-#     })
 
 @login_required
 def like(request, post_id):
