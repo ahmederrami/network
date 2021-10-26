@@ -1,0 +1,53 @@
+
+{% for post in posts %}
+    <div id={{post.id}} class="card border-dark mb-3">
+        <div class="card-header">
+            <a href="{% url 'profile' post.owner.username %}" class="card-link">{{post.owner.username}}</a>
+            <i>{{post.timestamp}}</i>
+        </div>
+        <div class="card-body">
+            <p class="card-text">{{post.content}}</p>
+        </div>
+        <div class="card-footer">
+            <div class="btns">
+                {% if user.is_authenticated %}
+                    {% if user in post.likedBy.all %}
+                        <i class="fas fa-thumbs-up"> {{post.likedBy.all.count}}</i>
+                    {% else %}
+                        <i class="far fa-thumbs-up"> {{post.likedBy.all.count}}</i>
+                    {% endif %}
+                {% else %}
+                <i class="fas fa-heart"> {{post.likedBy.all.count}}</i>
+                {% endif %}
+
+                {% if post.owner.username == user.username %}       
+                <button type="button" class="edit-post-btn btn-primary">Edit</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endfor %}
+
+<!--Pagination-->
+<!-- https://www.ordinarycoders.com/blog/article/django-pagination -->
+<div class="container p-4">
+    <div class="pagination justify-content-center">
+        <span class="step-links">
+          {% if posts.has_previous %}
+              <a href="?page=1">&laquo; first</a>
+              <a href="?page={{ posts.previous_page_number }}"> previous</a>
+          {% endif %}
+
+            <span class="current">
+                Page {{ posts.number }} of {{ posts.paginator.num_pages }}
+            </span>
+
+          {% if posts.has_next %}
+              <a href="?page={{ posts.next_page_number }}"> next</a>
+              <a href="?page={{ posts.paginator.num_pages }}"> last &raquo;</a>
+          {% endif %}
+        </span>
+    </div>
+</div>
+  <!--end of Pagination-->
