@@ -10,7 +10,7 @@ from django.core.paginator import Paginator
 
 from .models import User, Post
 
-POSTS_BY_PAGE=5
+POSTS_BY_PAGE=10
 
 def index(request):
     # select all posts

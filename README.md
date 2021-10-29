@@ -1,4 +1,3 @@
-Hi,  
 This project consists of designing a Twitter-like social network website for making posts and following users. It was developed using python (django) and javascript. Below are the features of the application.    
 # 🕐 New Post  
 At the top of the page, a “New Post” box is shown. So the authenticated user can write a new text-based post by filling in text into the text area. Then he has to click the submit button to submit the post.  
@@ -9,6 +8,8 @@ From user posts list, if the authenticated user clicks on a username, it takes h
 # 🕓 Following 
 The “Following” link in the navigation bar take the authenticated user to a page where he see all posts made by users that he follows. This page is similar to "All Posts" page, but is limited to posts from users he follows.  
 # 🕔 Pagination  
-Let's now click on an email in inbox. We notice that we have a button that allows us to reply to the email. If I click it I'm taken to the email composition form witch is pre-filled with the recipient field set to the sender of the original email, the subject field begins with "Re" and the body field contains the original text of the email.
+On any page that displays posts, posts are displayed 10 on a page. If there are more than ten posts, a “Next” button appears to take the user to the next page of posts (which are older than the current page of posts). If not on the first page, a “Previous” button appear to take the user to the previous page of posts as well.
+# 🕔 Edit Post
+Users are able to click the “Edit” button on any of their own posts to edit that post. When the content is updated, user can save it using "save" button. 
 # 🕔 “Like” and “Unlike”  
-Let's now click on an email in inbox. We notice that we have a button that allows us to reply to the email. If I click it I'm taken to the email composition form witch is pre-filled with the recipient field set to the sender of the original email, the subject field begins with "Re" and the body field contains the original text of the email.
+Authenticated user is able to click like icon on any post to toggle whether or not he “likes” that post. The "likes" count is displayed and is updated each time a user click on that icon.
